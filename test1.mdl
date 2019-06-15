@@ -1,0 +1,6 @@
+push
+move 250 250 250
+scale 30 30 30
+mesh :d.obj
+save test1.png
+display
