@@ -1,4 +1,5 @@
 #Thanks to Claire Liu for helping me with this
+#Thanks to Ivan Zhang and Runmin Lu for helping me with this at stuyhacks!!!!!! 
 from display import *
 from matrix import *
 from gmath import *
@@ -97,7 +98,6 @@ def scanline_convert(polygons, i, screen, zbuffer, color):
         x1+= dx1
         z1+= dz1
         y+= 1
-
 
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
@@ -231,7 +231,60 @@ def add_sphere(polygons, cx, cy, cz, r, step ):
                              points[p3][1],
                              points[p3][2])
 
+def add_cylinder(polygons, cx, cy, cz, r, h, step ):
+    points = generate_cylinder(cx, cy, cz, r, h, step)
+    i = 0
+    while i < step:
+        p0 = i * 2
+        p = p0 + 1
+        p2 = (p + 2) % (step * 2)
+        add_polygon(polygons,
+                    points[p0][0], points[p0][1], points[p0][2],
+                    points[p][0], points[p][1], points[p][2],
+                    points[p2][0], points[p2][1], points[p2][2])
+        p = p2
+        p2 -= 1
+        add_polygon(polygons,
+                    points[p0][0], points[p0][1], points[p0][2],
+                    points[p][0], points[p][1], points[p][2],
+                    points[p2][0], points[p2][1], points[p2][2])
+        i+=1
 
+def add_cone(polygons, cx, cy, cz, r, h, step ):
+    points = generate_cone(cx, cy, cz, r, h, step)
+    p = len(points) - 1
+    i = 0
+    while i < step:
+        p0 = i
+        p2 = (i + 1) % step
+        add_polygon(polygons,
+                    points[p0][0], points[p0][1], points[p0][2],
+                    points[p][0], points[p][1], points[p][2],
+                    points[p2][0], points[p2][1], points[p2][2])
+        i +=1
+
+def generate_cone(cx, cy, cz, r, h, step):
+    points = []
+    s = 0
+    end = step
+    for rotation in range(s, end):
+        rot = rotation/float(step)
+        z = cz + r * math.sin(2*math.pi * rot)
+        x = cx + r * math.cos(2*math.pi * rot)
+        points.append([x, cy, z])
+    points.append([cx, cy + h, cz])
+    return points
+def generate_cylinder(cx, cy, cz, r, h, step):
+    points = []
+    s = 0
+    end = step
+    for rotation in range(s, end):
+        rot = rotation/float(step)
+        z = cz + r * math.sin(2*math.pi * rot)
+        x = cx + r * math.cos(2*math.pi * rot)
+        points.append([x, cy, z])
+        points.append([x, cy + h, z])
+    return points
 def generate_sphere( cx, cy, cz, r, step ):
     points = []
 

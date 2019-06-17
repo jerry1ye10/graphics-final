@@ -157,10 +157,28 @@ def run(filename):
             stack[-1] = [ x[:] for x in tmp]
             tmp = []
         elif c=='mesh':
-                meshFaces(tmp,args[0]+".obj")
-                matrix_mult(stack[-1],tmp)
-                draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
-                tmp=[]
+            meshFaces(tmp,args[0]+".obj")
+            matrix_mult(stack[-1],tmp)
+            draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
+            tmp=[]
+        elif c == 'cylinder':
+            if command['constants']:
+                reflect = command['constants']
+            add_cylinder(tmp,
+                        args[0], args[1], args[2], args[3], args[4], step_3d)
+            matrix_mult( stack[-1], tmp )
+            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+            tmp = []
+            reflect = '.white'
+        elif c == 'cone':
+            if command['constants']:
+                reflect = command['constants']
+            add_cone(tmp,
+                             args[0], args[1], args[2], args[3], args[4], step_3d)
+            matrix_mult( stack[-1], tmp )
+            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+            tmp = []
+            reflect = '.white'
         elif c == 'push':
             stack.append([x[:] for x in stack[-1]] )
         elif c == 'pop':
